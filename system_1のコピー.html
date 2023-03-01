@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="g3common.css">
+    <link rel="stylesheet" href="recorder.css">
+    <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+    <audio src="sound.mp3" preload="auto" id="sound"></audio>
+
+    <title>カタログ choise</title>
+
+</head>
+
+<body>
+    <div class="content">
+        <div class="box g3" id="recordings">
+            <h1>選択実験</h1>
+            <div class="footer">
+                <button title="Start/Stop Rudimentary Streams" id="startstop">...</button>
+                <button title="Perform a calibration" id="calib">&#8857;</button>
+                <input id="scenescale" type="checkbox" name="scale" autocomplete="off"></input>
+                <label for="scenescale">Scale Scene Images</label>
+            </div>
+            <!--<i>Note; Rudimentary use a huge amount of resources on the
+                Recording Unit. It is not recommended for any type of
+                production use.</i><p>-->
+            <p>カタログギフトの中から自分が一番欲しいものを選んでください</p>
+            <input type="text" size="20" value="名前" id="username">
+            <p id="label" hidden>label:</p>
+            <p id="confidence">C:</p>
+            <button title="recording to json" id="rcrdstrt" style="width:100px; height:30px">start</button>
+            <button title="stop recording" id="rcrdstp" style="width:100px; height:30px" hidden>stop</button>
+            <br>
+            <br>
+            <select name="choise" id="choise">
+                <option value="-1">選択してください</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+                <option value="31">31</option>
+                <option value="32">32</option>
+                <option value="33">33</option>
+                <option value="34">34</option>
+                <option value="35">35</option>
+                <option value="36">36</option>
+                <option value="37">37</option>
+                <option value="38">38</option>
+                <option value="39">39</option>
+                <option value="40">40</option>
+                <option value="41">41</option>
+                <option value="42">42</option>
+                <option value="43">43</option>
+                <option value="44">44</option>
+                <option value="45">45</option>
+                <option value="46">46</option>
+                <option value="47">47</option>
+                <option value="48">48</option>
+                <option value="49">49</option>
+                <option value="50">50</option>
+                <option value="51">51</option>
+                <option value="52">52</option>
+                <option value="53">53</option>
+                <option value="54">54</option>
+                <option value="55">55</option>
+                <option value="56">56</option>
+                <option value="57">57</option>
+                <option value="58">58</option>
+                <option value="59">59</option>
+                <option value="60">60</option>
+                <option value="61">61</option>
+                <option value="62">62</option>
+                <option value="63">63</option>
+                <option value="64">64</option>
+                <option value="65">65</option>
+                <option value="66">66</option>
+                <option value="67">67</option>
+                <option value="68">68</option>
+                <option value="69">69</option>
+                <option value="70">70</option>
+                <option value="71">71</option>
+                <option value="72">72</option>
+                <option value="73">73</option>
+                <option value="74">74</option>
+                <option value="75">75</option>
+                <option value="76">76</option>
+                <option value="77">77</option>
+                <option value="78">78</option>
+                <option value="79">79</option>
+                <option value="80">80</option>
+                <option value="81">81</option>
+                <option value="82">82</option>
+                <option value="83">83</option>
+                <option value="84">84</option>
+                <option value="85">85</option>
+                <option value="86">86</option>
+                <option value="87">87</option>
+                <option value="88">88</option>
+                <option value="89">89</option>
+                <option value="90">90</option>
+                <option value="91">91</option>
+                <option value="92">92</option>
+                <option value="93">93</option>
+                <option value="94">94</option>
+                <option value="95">95</option>
+                <option value="96">96</option>
+                <option value="97">97</option>
+                <option value="98">98</option>
+                <option value="99">99</option>
+                <option value="100">100</option>
+                <option value="101">101</option>
+                <option value="102">102</option>
+                <option value="103">103</option>
+                <option value="104">104</option>
+                <option value="105">105</option>
+                <option value="106">106</option>
+                <option value="107">107</option>
+                <option value="108">108</option>
+                <option value="109">109</option>
+                <option value="110">110</option>
+                <option value="111">111</option>
+                <option value="112">112</option>
+                <option value="113">113</option>
+                <option value="114">114</option>
+                <option value="115">115</option>
+                <option value="116">116</option>
+            </select>
+            <button title="decide" id="decide">決定する！</button>
+            <br>
+            <br>
+            <p id="Recommend" style="font-size: 20px; color:#ff0000"></p>
+            <div id="Rec_img"></div>
+
+            <!--<div class="box" style="width:100%;height:500px"></div>-->
+            <br>
+            <!--hiddenにしたりしなかったりする-->
+            <canvas class="g3" id="scene" src="g3.png" width="600" height="600" hidden></canvas>
+            <br>
+            <img class="assist_img" id="assist" src="" width="400"></canvas>
+            <!--div id="status">status</div-->
+
+
+            <br>
+            <span id="scenets" hidden>Scene Time: </span><br>
+            <span id="gazets" hidden>Gaze Time:</span><br>
+            <span id="gaze" hidden>Gaze Position:</span><br>
+            <span id="imudata" hidden>IMU Data:</span><br>
+
+            <div class="flex">
+                <div id="eventslog" hidden></div>
+                <input id="eventmsg" type="text" hidden></input>
+                <button id="eventsend" title="Send" hidden>&#10162;</button>
+            </div>
+            <p>
+        </div>
+    </div>
+    <script src="g3common.js"></script>
+    <script src="g3obj.js"></script>
+    <script>
+        let username = document.getElementById('username');
+        //記録用json
+        var whatgaze = [{
+            //"result": "カレー"
+        }];
+        //記録中判別
+        var makejson = 0;
+        //カウント用の配列
+        var tag_array = {};
+
+        var recommend;
+
+        var ts_save;
+        var ts_start;
+
+        var x = 0;
+        var y = 0;
+        var Le_p = 0;
+        var Re_p = 0;
+        var rec_on;
+
+        var LastPage = 2;
+        var ts_LP;
+        var FixNum = 0;
+        var rcm = 0;
+
+        //学習モデルのURL
+        const imageModelURL = 'https://teachablemachine.withgoogle.com/models/BnX14fu1S/';
+
+        let classifier = ml5.imageClassifier(imageModelURL + 'model.json', () => {
+            // ロード完了
+            console.log('Model Loaded!');
+        });
+
+        let canvas = document.getElementById('scene');
+
+        function send_event(rudi) {
+            rudi.call("send-event",
+                ["WebUI", {
+                    client: "rudimentary",
+                    text: eventmsg.value
+                }]);
+        }
+
+        function rudimentary_init() {
+            var startstop = document.getElementById("startstop");
+            var root = new G3Obj();
+            root.open()
+                .then(() => {
+                    var rudi = root.child("rudimentary");
+                    var keepalive = null;
+                    var _gazeid;
+                    var _sceneid;
+                    var _eventid;
+                    var _imuid;
+                    var imus = [];
+                    rudi.get("scene-scale")
+                        .then((r) => {
+                            console.log("scene-scale", r);
+                            scenescale.checked = r == 2;
+                        });
+                    scenescale.onchange = () => {
+                        rudi.set("scene-scale", scenescale.checked ? 2 : 1);
+                    };
+
+                    eventsend.onclick = () => send_event(rudi);
+                    eventmsg.onchange = () => send_event(rudi);
+
+                    //console.log("a")
+                    startstop.innerHTML = ICON_PLAY;
+                    startstop.onclick = async () => {
+                        if (keepalive != null) {
+                            //接続のなんとか
+                            clearInterval(keepalive);
+                            rudi.disconnect(_gazeid);
+                            rudi.disconnect(_sceneid);
+                            rudi.disconnect(_eventid);
+                            rudi.disconnect(_imuid);
+                            startstop.innerHTML = ICON_PLAY;
+                            keepalive = null;
+                        } else {
+
+                            //視点データ受信
+                            _gazeid = await rudi.connect("gaze", (body) => {
+                                gazets.innerHTML = body[0].toFixed(3);
+                                if ("gaze2d" in body[1]) {
+                                    x = body[1].gaze2d[0]
+                                    y = body[1].gaze2d[1]
+                                    Le_p = body[1].eyeleft.pupildiameter
+                                    Re_p = body[1].eyeright.pupildiameter
+                                    gaze.innerHTML = "(" +
+                                        x.toFixed(2) + ", " +
+                                        y.toFixed(2) +
+                                        ")";
+
+
+                                    //console.log(body);
+
+                                    //gazearr.push([x],[y])
+                                    //console.log(Number(x));
+                                    //console.log(body)
+                                    //console.log(body[1].eyeleft.pupildiameter)
+
+                                } else {
+                                    gaze.innerHTML = "()";
+                                    /*x = -1;
+                                    y = -1;*/
+                                }
+                            });
+
+                            _sceneid = await rudi.connect("scene", (body) => {
+                                const scene = document.querySelector("#scene");
+                                const ctx = scene.getContext("2d");
+
+                                const chara = new Image();
+                                var img = "data:image/jpeg;charset=utf-8;base64," + body[1]
+                                chara.src = img;
+                                chara.onload = () => {
+                                    /*if(x = -1){
+                                        ctx.drawImage(chara,1920*0.5-150,1080*0.5-84.375,
+                                        300,168.75,0,0,300,168.75);
+                                    }else {*/
+                                    //console.log((960*x)-37.5);
+                                    if ((chara.width * x) > 250 && (chara.width * x) < chara.width - 250 && (chara.height * y) > 250 && (chara.height * y) < chara.height - 250) {
+                                        ctx.drawImage(chara,
+                                            (chara.width * x) - 250,  // sx      (元画像の切り抜き始点X)
+                                            (chara.height * y) - 250,  // sy      (元画像の切り抜き始点Y)
+                                            500,  // sWidth  (元画像の切り抜きサイズ：横幅)
+                                            500,  // sHeight (元画像の切り抜きサイズ：高さ)
+                                            0,  // dx      (Canvasの描画開始位置X)
+                                            0,  // dy      (Canvasの描画開始位置Y)
+                                            500,  // 300dWidth  (Canvasの描画サイズ：横幅)
+                                            500   // 168.75dHeight (Canvasの描画サイズ：高さ)
+                                        );
+                                        //}
+                                    }
+                                    else if ((chara.width * x) < 250) {
+                                        250,  // sx      (元画像の切り抜き始点X)
+                                            (chara.height * y) - 250,  // sy      (元画像の切り抜き始点Y)
+                                            500,  // sWidth  (元画像の切り抜きサイズ：横幅)
+                                            500,  // sHeight (元画像の切り抜きサイズ：高さ)
+                                            0,  // dx      (Canvasの描画開始位置X)
+                                            0,  // dy      (Canvasの描画開始位置Y)
+                                            500,  // 300dWidth  (Canvasの描画サイズ：横幅)
+                                            500   // 168.75dHeight (Canvasの描画サイズ：高さ)
+                                    }
+                                    else if ((chara.width * x) > chara.width - 250) {
+                                        chara.width - 250,  // sx      (元画像の切り抜き始点X)
+                                            (chara.height * y) - 250,  // sy      (元画像の切り抜き始点Y)
+                                            500,  // sWidth  (元画像の切り抜きサイズ：横幅)
+                                            500,  // sHeight (元画像の切り抜きサイズ：高さ)
+                                            0,  // dx      (Canvasの描画開始位置X)
+                                            0,  // dy      (Canvasの描画開始位置Y)
+                                            500,  // 300dWidth  (Canvasの描画サイズ：横幅)
+                                            500   // 168.75dHeight (Canvasの描画サイズ：高さ)
+                                    }
+                                    else if ((chara.height * y) < 250) {
+                                        (chara.width * x) - 250,  // sx      (元画像の切り抜き始点X)
+                                            250,  // sy      (元画像の切り抜き始点Y)
+                                            500,  // sWidth  (元画像の切り抜きサイズ：横幅)
+                                            500,  // sHeight (元画像の切り抜きサイズ：高さ)
+                                            0,  // dx      (Canvasの描画開始位置X)
+                                            0,  // dy      (Canvasの描画開始位置Y)
+                                            500,  // 300dWidth  (Canvasの描画サイズ：横幅)
+                                            500   // 168.75dHeight (Canvasの描画サイズ：高さ)
+                                    }
+                                    else if ((chara.height * y) > chara.height - 250) {
+                                        (chara.width * x) - 250,  // sx      (元画像の切り抜き始点X)
+                                            chara.height - 250,  // sy      (元画像の切り抜き始点Y)
+                                            500,  // sWidth  (元画像の切り抜きサイズ：横幅)
+                                            500,  // sHeight (元画像の切り抜きサイズ：高さ)
+                                            0,  // dx      (Canvasの描画開始位置X)
+                                            0,  // dy      (Canvasの描画開始位置Y)
+                                            500,  // 300dWidth  (Canvasの描画サイズ：横幅)
+                                            500   // 168.75dHeight (Canvasの描画サイズ：高さ)
+                                    }
+                                    else {
+                                        chara.width / 2,  // sx      (元画像の切り抜き始点X)
+                                            chara.height / 2,  // sy      (元画像の切り抜き始点Y)
+                                            500,  // sWidth  (元画像の切り抜きサイズ：横幅)
+                                            500,  // sHeight (元画像の切り抜きサイズ：高さ)
+                                            0,  // dx      (Canvasの描画開始位置X)
+                                            0,  // dy      (Canvasの描画開始位置Y)
+                                            500,  // 300dWidth  (Canvasの描画サイズ：横幅)
+                                            500   // 168.75dHeight (Canvasの描画サイズ：高さ)
+                                    }
+                                };
+
+
+
+                                //視点映像のコマ送り
+                                ts_save = body[0].toFixed(3)
+                                scenets.innerHTML = ts_save;
+                                //var img = "data:image/jpeg;charset=utf-8;base64," + body[1]
+                                //scene.src = img;
+
+                                //最後のページを見てから2分後に推薦
+                                if (LastPage == 2) {
+                                    ts_LP = ts_save;
+                                    LastPage++;
+                                    console.log("LP");
+                                }
+
+                                if (rec_on == 1) {
+                                    //推薦するタイミングを設定
+                                    if (ts_save - ts_LP >= 20) {
+                                        console.log("ATOS");
+                                        makejson = 0;
+                                        document.getElementById("sound").play();
+                                        for (var j = 0; j < whatgaze.length; j++) {
+                                            if (!tag_array[whatgaze[j].result]) {
+                                                tag_array[whatgaze[j].result] = 0;
+                                            }
+                                            tag_array[whatgaze[j].result]++;
+                                        }
+                                        var array = Object.keys(tag_array).map((k) => ({ key: k, value: tag_array[k] }));
+
+                                        array.sort((a, b) => a.value - b.value);
+
+                                        obj = Object.assign({}, ...array.map((item) => ({
+                                            [item.key]: item.value,
+                                        })));
+
+                                        var key = Object.keys(obj)
+                                        console.log(key)
+                                        console.log(key[key.length - 1])
+                                        if (key[key.length - 1] == "nothing") {
+                                            rcm = "p110"
+                                            //if(rcm!=null){
+                                            Recommend.innerHTML = rcm.replace(/[^0-9]/g, '') + "ページの商品がオススメです！";
+                                            var ast = document.getElementById("assist");
+                                            ast.src = "assist_pic/"+rcm+".jpeg";
+                                        //}
+                                            //assist.innerHTML = "<img src=assist_pic/"+recommend+".jpeg></img>"
+                                        } else {
+                                            rcm = "p110"
+                                            //if(rcm!=null){
+                                            Recommend.innerHTML = rcm.replace(/[^0-9]/g, '') + "ページの商品がオススメです！";
+                                            var ast = document.getElementById("assist");
+                                            ast.src = "assist_pic/"+rcm+".jpeg";
+                                            //assist.innerHTML = "<img src=assist_pic/"+recommend+".jpeg></img>"
+                                            //}
+                                        }
+                                        rec_on = 2;
+                                    }
+                                }
+
+                                /*
+                                if (rec_on == 1) {
+                                    if (ts_save - ts_start >= 60) {
+                                        //startからn秒たったときに推薦する
+                                        makejson = 0;
+                                        console.log("b");
+                                        document.getElementById("sound").play();
+                                        for (var j = 0; j < whatgaze.length; j++) {
+                                            if (!tag_array[whatgaze[j].result]) {
+                                                tag_array[whatgaze[j].result] = 0;
+                                            }
+                                            tag_array[whatgaze[j].result]++;
+                                        }
+                                        //console.log(tag_array)
+
+                                        var array = Object.keys(tag_array).map((k) => ({ key: k, value: tag_array[k] }));
+
+                                        array.sort((a, b) => a.value - b.value);
+
+                                        obj = Object.assign({}, ...array.map((item) => ({
+                                            [item.key]: item.value,
+                                        })));
+
+                                        var key = Object.keys(obj)
+                                        console.log(key)
+                                        console.log(key[key.length - 1])
+                                        if (key[key.length - 1] == "nothing") {
+                                            recommend = key[key.length - 2]
+                                            Recommend.innerHTML = "推薦するのは" + recommend + "です！";
+                                            //Rec_img.innerHTML = "<img src=観光地/"+recommend+".jpeg style='width:400px;height:300px;object-fit:cover;'></img>"
+                                        } else {
+                                            recommend = key[key.length - 1]
+                                            Recommend.innerHTML = "推薦するのは" + recommend + "です！";
+                                            //Rec_img.innerHTML = "<img src=観光地/"+recommend+".jpeg style='width:400px;height:300px;object-fit:cover;''></img>"
+                                           
+                                        }
+                                        rec_on = 2;
+                                    }
+                                }
+                                if (rec_on == 2) {
+                                    if (ts_save - ts_start >= 180) {
+                                        //startからn秒たったときに推薦する
+                                        makejson = 0;
+                                        console.log("b");
+                                        document.getElementById("sound").play();
+                                        for (var j = 0; j < whatgaze.length; j++) {
+                                            if (!tag_array[whatgaze[j].result]) {
+                                                tag_array[whatgaze[j].result] = 0;
+                                            }
+                                            tag_array[whatgaze[j].result]++;
+                                        }
+                                        //console.log(tag_array)
+
+                                        var array = Object.keys(tag_array).map((k) => ({ key: k, value: tag_array[k] }));
+
+                                        array.sort((a, b) => a.value - b.value);
+
+                                        obj = Object.assign({}, ...array.map((item) => ({
+                                            [item.key]: item.value,
+                                        })));
+
+                                        var key = Object.keys(obj)
+                                        console.log(key)
+                                        console.log(key[key.length - 1])
+                                        if (key[key.length - 1] == "nothing") {
+                                            recommend = key[key.length - 2]
+                                            Recommend.innerHTML = "推薦するのは" + recommend + "です！";
+                                            //Rec_img.innerHTML = "<img src=観光地/"+recommend+".jpeg style='width:400px;height:300px;object-fit:cover;'></img>"
+                                        } else {
+                                            recommend = key[key.length - 1]
+                                            Recommend.innerHTML = "推薦するのは" + recommend + "です！";
+                                            //Rec_img.innerHTML = "<img src=観光地/"+recommend+".jpeg style='width:400px;height:300px;object-fit:cover;''></img>"
+                                           
+                                        }
+                                        rec_on = 0;
+                                    }
+                                }
+                                */
+
+
+                                //モデルとの比較
+                                classifyCanvas();
+                            });
+                            _imuid = await rudi.connect("imu", (body) => {
+                                for (var unit in body[1]) {
+                                    var vec = body[1][unit];
+                                    if (!(unit in imus)) {
+                                        imus[unit] = document.createElement("pre");
+                                        imudata.append(imus[unit]);
+                                    }
+                                    imus[unit].innerHTML = body[0].toFixed(3) + " : " + unit + " " + g3_v2s(body[1][unit]);
+                                };
+                            });
+                            _eventid = await rudi.connect("event", (body) => {
+                                var ts = body[0];
+                                var tagname = body[1]["tag"];
+                                var obj = body[1]["object"];
+
+                                var ev = document.createElement("div");
+                                var hdr = document.createElement("span");
+                                var msg = document.createElement("pre");
+                                ev.classList.add("logevent");
+                                ev.append(hdr);
+                                ev.append(msg);
+                                if (tagname == "WebUI") {
+                                    hdr.innerHTML = ts.toFixed(3) + " : <b>" + obj["client"] + "</b>";
+                                    msg.innerHTML = obj["text"];
+                                } else {
+                                    hdr.innerHTML = ts.toFixed(3) + " : " + data["tag"];
+                                    msg.innerHTML = JSON.stringify(data["object"]);
+                                }
+                                eventslog.append(ev);
+                                while (eventslog.childNodes.length > 12)
+                                    eventslog.removeChild(eventslog.childNodes[0]);
+                                ev.scrollIntoView();
+                            });
+
+
+                            rudi.call("keepalive");
+                            keepalive = setInterval(() => {
+                                console.log("KeepAlive");
+                                rudi.call("keepalive");
+                            }, 3000);
+                            startstop.innerHTML = ICON_STOP;
+                        }
+                    };
+                    calib.onclick = async () => {
+                        calib.innerHTML = ICON_CALIBRATE + ICON_WAIT;
+                        var succ = await rudi.call("calibrate");
+                        if (succ)
+                            calib.innerHTML = ICON_CALIBRATE + ICON_OK;
+                        else
+                            calib.innerHTML = ICON_CALIBRATE + ICON_CANCEL;
+                    };
+                    rcrdstrt.onclick = async () => {
+                        //start
+                        makejson = 1;
+                        whatgaze = [{}];
+                        tag_array = {};
+                        console.log("a");
+                        ts_start = ts_save;
+                        rec_on = 1;
+                        confidence.innerHTML = "STARTED!";
+
+                    }
+                    rcrdstp.onclick = async () => {
+                        makejson = 0;
+                        console.log("b");
+                        for (var j = 0; j < whatgaze.length; j++) {
+                            if (!tag_array[whatgaze[j].result]) {
+                                tag_array[whatgaze[j].result] = 0;
+                            }
+                            tag_array[whatgaze[j].result]++;
+                        }
+                        //console.log(tag_array)
+
+                        var array = Object.keys(tag_array).map((k) => ({ key: k, value: tag_array[k] }));
+
+                        array.sort((a, b) => a.value - b.value);
+
+                        obj = Object.assign({}, ...array.map((item) => ({
+                            [item.key]: item.value,
+                        })));
+
+                        var key = Object.keys(obj)
+                        console.log(key)
+                        console.log(key[key.length - 1])
+                        if (key[key.length - 1] == "nothing") {
+                            recommend = 110;
+                            Recommend.innerHTML = "推薦するのは" + recommend + "です！";
+                            //Rec_img.innerHTML = "<img src=観光地/"+recommend+".jpeg></img>"
+                        } else {
+                            recommend = 110;
+                            Recommend.innerHTML = "推薦するのは" + recommend + "です！";
+                            //Rec_img.innerHTML = "<img src=観光地/"+recommend+".jpeg></img>"
+                        }
+
+                    }
+                    decide.onclick = async () => {
+                        //csvにするよ
+                        //実験の時は必ずONにする！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+                        if (choise.value > 0) {
+                            WriteToCSV();
+                        }
+                        status.innerHTML = "<a href='https://docs.google.com/forms/d/e/1FAIpQLScWTdskKobToW_g6L0VcACpGOFJuRt3us3hcg3CMz6kVJy-NA/viewform'>アンケートへ進む</a>";
+                    }
+
+                });
+        }
+
+        function classifyCanvas() {
+            classifier.classify(canvas, gotResult);
+        }
+
+        function gotResult(error, results) {
+            //結果発表
+            if (error) {
+                console.error(error);
+            }
+            console.log(results[0].label);
+            // 結果のラベルと信頼度を表示
+            label.textContent = `Label: ${results[0].label}`;
+            confidence.textContent = `C: ${results[0].confidence.toFixed(4)}`;
+            FixNum = Number(results[0].confidence);
+            if (results[0].label == "p115" && FixNum > 0.8) {
+                //最後まで辿り着いたかの判定
+                LastPage++;
+                console.log("116");
+            }
+            if (results[0].label == "p116" && FixNum > 0.8) {
+                //最後まで辿り着いたかの判定
+                LastPage++;
+                console.log("116");
+            }
+            //jsonに追加
+            //if (makejson == 1) {
+            // if(results[0].confidence >= 0.5){
+            //whatgazeに列を足す
+            //console.log(FixNum);
+            if(FixNum < 0.6){
+                whatgaze.push({ "result": "nothing", "result_confidence": results[0].confidence, "sceneTime": ts_save, "gazeX": x, "gazeY": y, "LeftEyePup": Le_p, "RightEyePup": Re_p });
+            }else{
+                whatgaze.push({ "result": results[0].label, "result_confidence": results[0].confidence, "sceneTime": ts_save, "gazeX": x, "gazeY": y, "LeftEyePup": Le_p, "RightEyePup": Re_p });
+            }
+            //console.log(whatgaze);
+            //}
+            //}
+        }
+
+        //csv保存
+        function WriteToCSV() {
+            let bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+            let jsonstring = json2csv(whatgaze);
+            let blob = new Blob([bom, jsonstring], { type: "text/plan" });
+            let link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = username.value + "_" + rcm + "_" + choise.value + "_" + ts_save + '.csv';
+            link.click();
+            whatgaze = [{}];
+        }
+
+
+        //json to csv
+        function json2csv(json) {
+            let ret = Object.keys(json[1]).join(',') + "\n";
+
+            ret += json.map(function (d) {
+                return Object.keys(d).map(function (key) {
+                    return d[key];
+                }).join(',');
+            }).join('\n');
+
+            return ret;
+        }
+
+
+
+        rudimentary_init();
+
+    </script>
+</body>
+
+</html>
